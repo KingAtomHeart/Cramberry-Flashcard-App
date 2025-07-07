@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cramberry</title>
+    <link rel="icon" type="image/png" href="images/cramberry.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="navbar-content">
+        <a href="#" class="navbar-brand">
+            <img src="images/cramberry2.png" alt="Cramberry Logo" class="logo-icon">
+            <!-- Cramberry -->
+        </a>
+        <div class="navbar-nav">
+            <a href="#" class="nav-link">Home</a>
+            <div class="dropdown">
+                <a href="#" class="nav-link dropdown-toggle">Controls</a>
+                <div class="dropdown-content">
+    <h4>Keyboard Controls</h4>
+    
+    <!-- Visual keyboard layout -->
+    <div class="keyboard-visual">
+        <div class="keyboard-row">
+            <div class="key study-incorrect" data-key="Q">Q</div>
+            <div class="key flip-up" data-key="W">W</div>
+            <div class="key study-correct" data-key="E">E</div>
+        </div>
+        <div class="keyboard-row">
+            <div class="key nav-left" data-key="A">A</div>
+            <div class="key flip-down" data-key="S">S</div>
+            <div class="key nav-right" data-key="D">D</div>
+        </div>
+    </div>
+    
+    <!-- Legend -->
+    <div class="keyboard-legend">
+        <div class="legend-item">
+            <div class="legend-color nav-left"></div>
+            <span>Previous Card</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color nav-right"></div>
+            <span>Next Card</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color flip-up"></div>
+            <span>Flip Card</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color study-incorrect"></div>
+            <span>Mark Incorrect</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color study-correct"></div>
+            <span>Mark Correct</span>
+        </div>
+    </div>
+    
+    <h4>Alternative Controls</h4>
+    <ul>
+        <li><code>←/→</code> Previous/Next card</li>
+        <li><code>Space/Enter</code> Flip card</li>
+        <li><code>1/2</code> Incorrect/Correct (legacy)</li>
+        <li><code>Ctrl+R</code> Shuffle/Reset</li>
+    </ul>
+</div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <!-- Header -->
+<!--     <div class="header">
+        <a href="#" class="header-brand">
+            <img src="images/cramberry2.png" alt="Cramberry Logo" class="header-icon">
+        </a>
+    </div> -->
+
+    <!-- File Upload Section -->
+    <div class="upload-section" id="uploadSection">
+        <div class="upload-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14,2 14,8 20,8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10,9 9,9 8,9"/>
+            </svg>
+        </div>
+        <h2>Import Your Flashcards</h2>
+        <p>Upload a .txt file with tab-separated values (front [TAB] back format)</p>
+        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7,10 12,15 17,10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Choose File
+        </button>
+        <input type="file" id="fileInput" accept=".txt" style="display: none;">
+        <div class="upload-background"></div>
+    </div>
+
+    <!-- Stats and Controls -->
+    <div class="stats-section" id="statsSection">
+        <div class="stats-content">
+            <div class="stats-info">
+                <div class="stat-item">
+                    <span class="stat-number" id="cardCount">0</span> cards loaded
+                </div>
+                <div class="stat-item">
+                    Card <span class="stat-number" id="currentCard">1</span> of <span id="totalCards">0</span>
+                </div>
+                <div class="stat-item" id="accuracyStats" style="display: none;">
+                    Accuracy: <span class="stat-number" id="accuracy">0%</span> (<span id="correctCount">0</span>/<span id="totalAnswered">0</span>)
+                </div>
+            </div>
+            <div class="controls">
+                <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7,10 12,15 17,10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    New File
+                </button>
+                <button class="btn btn-primary" id="studyModeBtn" onclick="toggleStudyMode()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+                        <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+                    </svg>
+                    Study Mode
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flashcard -->
+    <div class="flashcard-container">
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+            <div class="card-inner">
+                <div class="card-front">
+                    <div class="card-type">Front</div>
+                    <div class="card-content">
+                        <div class="card-text">
+                            <div class="content" id="cardContentFront">No cards loaded</div>
+                            <div class="card-hint" id="cardHintFront">Click to reveal answer</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div class="card-type">Back</div>
+                    <div class="card-content">
+                        <div class="card-text">
+                            <div class="content" id="cardContentBack">Answer will appear here</div>
+                            <div class="card-hint">Click to return to question</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation" id="navigation" style="display: none;">
+        <div class="nav-buttons">
+            <button class="nav-btn" id="prevBtn" onclick="prevCard()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15,18 9,12 15,6"/>
+                </svg>
+            </button>
+            <button class="flip-btn" onclick="flipCard()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="1,4 1,10 7,10"/>
+                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                </svg>
+                Flip Card
+            </button>
+            <button class="nav-btn" id="nextBtn" onclick="nextCard()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9,18 15,12 9,6"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="study-controls" id="studyControls">
+            <button class="btn btn-secondary" onclick="handleAnswer(false)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+                Incorrect
+            </button>
+            <button class="btn btn-success" onclick="handleAnswer(true)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20,6 9,17 4,12"/>
+                </svg>
+                Correct
+            </button>
+        </div>
+    </div>
+
+
+
+
+    <!-- Study Complete -->
+    <div class="complete-section" id="completeSection">
+        <div class="complete-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+                <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+            </svg>
+        </div>
+        <h3>Study Session Complete!</h3>
+        <p id="finalScore">Final Score: 0/0 (0%)</p>
+        <button class="btn btn-primary" onclick="resetStudy()">Study Again</button>
+    </div>
+
+<!-- Instructions -->
+    <div class="instructions">
+        <h3>How to Use</h3>
+        <ul>
+            <li>Create a .txt file with your flashcards in tab-separated format: <code>Question [TAB] Answer</code></li>
+            <li>Each line should contain one flashcard</li>
+            <li>Click cards to flip them or use the Flip Card button</li>
+            <li>Use Study Mode to track your progress and accuracy</li>
+            <li>Navigate with the arrow buttons or answer buttons in study mode</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>About Cramberry</h4>
+            <p>A simple, keyboard-friendly flashcard app designed for efficient studying. Upload your own cards and track your progress with built-in study mode.</p>
+        </div>
+        <div class="footer-section">
+            <h4>Features</h4>
+            <ul>
+                <li>Keyboard shortcuts for fast navigation</li>
+                <li>Study mode with progress tracking</li>
+                <li>Support for multiple file formats</li>
+                <li>Difficulty-based card review</li>
+                <li>Session statistics</li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>File Formats</h4>
+            <ul>
+                <li><code>.txt</code> files with tab separation</li>
+                <li>Alternative separators: <code>|</code>, <code>;</code>, <code>:</code></li>
+                <li>One flashcard per line</li>
+                <li>Format: <code>Front [TAB] Back</code></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 Cramberry. Built for students, by students.</p>
+        <div class="footer-links">
+        </div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+<script src="script.js"></script>
+</body>
+</html>
